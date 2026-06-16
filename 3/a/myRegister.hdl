@@ -1,0 +1,32 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/3/a/Register.hdl
+/**
+ * 16-bit register:
+ * If load is asserted, the register's value is set to in;
+ * Otherwise, the register maintains its current value:
+ * if (load(t)) out(t+1) = int(t), else out(t+1) = out(t)
+ */
+CHIP myRegister {
+    IN in[16], load;
+    OUT out[16];
+
+    PARTS:
+    myBit(in=in[0],load=load,out=out[0]);
+    myBit(in=in[1],load=load,out=out[1]);
+myBit(in=in[2],load=load,out=out[2]);
+myBit(in=in[3],load=load,out=out[3]);
+myBit(in=in[4],load=load,out=out[4]);
+myBit(in=in[5],load=load,out=out[5]);
+myBit(in=in[6],load=load,out=out[6]);
+myBit(in=in[7],load=load,out=out[7]);
+myBit(in=in[8],load=load,out=out[8]);
+myBit(in=in[9],load=load,out=out[9]);
+myBit(in=in[10],load=load,out=out[10]);
+myBit(in=in[11],load=load,out=out[11]);
+myBit(in=in[12],load=load,out=out[12]);
+myBit(in=in[13],load=load,out=out[13]);
+myBit(in=in[14],load=load,out=out[14]);
+myBit(in=in[15],load=load,out=out[15]);
+}
