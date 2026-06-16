@@ -1,0 +1,9 @@
+CHIP myMux8Way {
+	IN a[2],b[2],c[2],d[2],sel[3];
+	OUT out;
+
+	PARTS:
+	myMux4Way(a=a[0],b=b[0],c=c[0],d=d[0],sel[0]=sel[0],sel[1]=sel[1],out=out1);
+	myMux4Way(a=a[1],b=b[1],c=c[1],d=d[1],sel[0]=sel[0],sel[1]=sel[1],out=out2);
+	myMux(a=out1,b=out2,sel=sel[2]out=out);
+}
