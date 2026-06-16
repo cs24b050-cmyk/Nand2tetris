@@ -1,0 +1,78 @@
+class Memory {
+
+    static Array RAMBASE;
+    static Array HEAPPTR;
+    static Array FREEHEAD;
+
+    /** Initialize memory manager */
+    function void init() {
+        let RAMBASE = 0;
+        let HEAPPTR = 2048;
+        let FREEHEAD = HEAPPTR;
+
+        let HEAPPTR[0] = 0;       // no next free block
+        let HEAPPTR[1] = 14334;   // full heap size
+
+        return;
+    }
+
+    /** Read RAM[address] */
+    function int peek(int a) {
+        return RAMBASE[a];
+    }
+
+    /** Write value to RAM[address] */
+    function void poke(int a, int v) {
+        let RAMBASE[a] = v;
+        return;
+    }
+
+    /** Allocate block of given size */
+    function int alloc(int needSize) {
+        var int scanPtr;
+        var int avail;
+        var Array result;
+
+        let scanPtr = FREEHEAD;
+
+        // loop over free list
+        while (~(scanPtr = 0)) {
+
+            let avail = RAMBASE[scanPtr + 1];
+
+            // check if block is large enough
+            if (~(avail < (needSize + 2))) {
+
+                // compute resulting user pointer
+                let result = scanPtr + (avail - needSize);
+
+                // reduce the free block's size
+                let RAMBASE[scanPtr + 1] = avail - (needSize + 2);
+
+                // write size metadata for allocated block
+                let result[1] = needSize;
+
+                return result;
+            }
+
+            // go to next free block
+            let scanPtr = RAMBASE[scanPtr];
+        }
+
+        return 0; // no space found
+    }
+
+    /** Return block to free list */
+    function void deAlloc(Array block) {
+        var int headerLoc;
+
+        // go back to header position (2 words before)
+        let headerLoc = block - 2;
+
+        // link it at start of free list
+        let RAMBASE[headerLoc] = FREEHEAD;
+        let FREEHEAD = headerLoc;
+
+        return;
+    }
+}

@@ -1,0 +1,124 @@
+/**
+ * Memory library implementing first-fit allocation.
+ * - peek / poke give direct RAM access
+ * - free list is maintained as a simple singly-linked list
+ * - blocks can be split, but freed blocks are simply pushed
+ *   back into the list (no merging or compaction).
+ */
+class Memory {
+
+    static Array RAM;      // raw RAM access (address 0)
+    static int HEAD;       // first free block in the list
+
+    /** Initialize heap area */
+    function void init() {
+        let RAM = 0;
+
+        // heap ranges from 2048..16383
+        let HEAD = 2048;
+
+        // free block header:
+        // RAM[HEAD + 0] = next free block
+        // RAM[HEAD + 1] = block size
+        // total heap size = 16384 - 2048 = 14336
+        let RAM[2048] = 0;            // no next block
+        let RAM[2048 + 1] = 14336;    // whole heap is free
+
+        return;
+    }
+
+    /** Read RAM[address] */
+    function int peek(int addr) {
+        return RAM[addr];
+    }
+
+    /** Write RAM[address] = value */
+    function void poke(int addr, int value) {
+        let RAM[addr] = value;
+        return;
+    }
+
+    /**
+     * Allocate a block using first-fit.
+     * Block format:
+     *   [0] -> next free block
+     *   [1] -> size of block
+     *   [2...] -> user data (returned pointer)
+     */
+    function int alloc(int req) {
+        var int prev;
+        var int curr;
+        var int size;
+        var int leftover;
+        var int newBlock;
+        var Array result;
+
+        let prev = 0;
+        let curr = HEAD;
+
+        // scan free list for first block that fits
+        while (curr != 0) {
+
+            let size = RAM[curr + 1];
+
+            // does it fit?
+            if (size >= req + 2) {
+
+                // exact fit → remove block
+                if (size = req + 2) {
+                    if (prev = 0) {
+                        let HEAD = RAM[curr];         // move head
+                    } else {
+                        let RAM[prev] = RAM[curr];    // unlink
+                    }
+
+                } else {
+                    // split block: user uses top part of block
+
+                    let leftover = size - (req + 2);
+                    let newBlock = curr + (req + 2);
+
+                    // new free block header
+                    let RAM[newBlock] = RAM[curr];    // next pointer
+                    let RAM[newBlock + 1] = leftover; // leftover size
+
+                    if (prev = 0) {
+                        let HEAD = newBlock;
+                    } else {
+                        let RAM[prev] = newBlock;
+                    }
+                }
+
+                let result = curr + 2;   // user pointer
+                let result[ -1 ] = req;  // store size in header position
+
+                return result;
+            }
+
+            // advance
+            let prev = curr;
+            let curr = RAM[curr];
+        }
+
+        return 0; // nothing fits
+    }
+
+    /**
+     * Free a previously allocated block.
+     * We simply push it into the front of the free list.
+     * (No merging.)
+     */
+    function void deAlloc(Array userPtr) {
+        var int header;
+
+        // userPtr points to data region; block header is 2 cells earlier
+        let header = userPtr - 2;
+
+        // push block at start of free list
+        let RAM[header] = HEAD;
+        let RAM[header + 1] = userPtr[-1] + 2;   // restore full block size
+        let HEAD = header;
+
+        return;
+    }
+}

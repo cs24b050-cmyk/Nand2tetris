@@ -1,0 +1,11 @@
+// We are given some numbers and we need to find their average we are going to store those numbers in the array and do average
+class Main {
+    function void main() {
+        var game g; // Creates a object of kind game
+        let g = game.new(); // Intilizing a game
+        do g.run(); // starting the game
+        return;
+
+        // We draw solid circle for computer's turn and solid square for user's turn
+    }
+}

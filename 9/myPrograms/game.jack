@@ -1,0 +1,144 @@
+// Tic Tac Toe
+class game {
+    field board b; // For creating a board i.e to draw a grid
+    field Array a; // values 
+    field int flag,count;
+
+    constructor game new() {
+        var int i;
+        let b = board.new();
+        let i = 0;
+        let a = Array.new(9);
+        while (i < 9) {
+            let a[i] = 0;
+            let i = i + 1;
+        }
+        let flag = 1; // Tells if there is space in the grid
+        let count = 0; // Tells no.of places are empty in the grid
+        return this;
+    }
+
+    method void run() {
+        var int result; // Tells if any of user or computer is won or is it draw
+        var int move;
+        var int i;
+        let result = -1;
+        // Let us say user enters the game first 
+        while(result = -1) {
+            let i = 0;
+            let count = 0; // count tells the no.of locations available
+            let flag = 0;
+            while (i < 9) {
+                if (a[i] = 0) {
+                    let flag = 1;
+                    let count = count + 1;
+                }
+                let i = i + 1;
+            }
+            // if flag = 0 => no empty spaces => game ends
+            if (flag = 0) {
+                do Output.printString("It's a draw");
+                return;
+            }
+            // user’s turn when count is odd
+            if ((count = 1) | (count = 3) | (count = 5) | (count = 7) | (count = 9)) {
+                do Output.printString("Enter");
+                let move = Keyboard.readInt("");
+                // We also need to push back the user inputs into the indicesu array
+                if ((move > 0) & (move < 10) & (a[move-1] = 0)) {
+                    let a[move-1] = 1;
+                    do b.draw(move, count);
+                } else {
+                    do Output.printString("Invalid input.");
+                }
+            } else {
+                // computer’s turn when count is even
+                let move = index(); // find first empty slot
+                if ((move > 0) & (move < 10)) {
+                    let a[move-1] = 2;
+                    do b.draw(move, count);
+                }
+            }
+            let result = setWinner();
+        }
+        if(result = 1) {
+            do Output.printString("YOU WIN!");
+            return;
+        }
+        if(result = 2) {
+            do Output.printString("YOU LOST!");
+            return;
+        }
+        return;
+    }
+
+    method int index() {
+        // returns the first empty index used by computer to draw in the grid
+        var int i;
+        let i = 0;
+        while (i < 9) {
+            if (a[i] = 0) {
+                return i+1;
+            }
+            let i = i + 1;
+        }
+        return -1;
+    }
+
+    method int setWinner() {
+        // We need to setWinner true if we found a winner and if it is true we again need to check who won
+        // return an integer to know who won and print the result 
+        // return 1 if user is winner
+        // return 2 if computer is winner
+        // return -1 if game is still on
+        if((a[0]=1)&(a[1]=1)&(a[2]=1)) {
+            return 1;
+        }
+        if(((a[3]=1)&(a[4]=1)&(a[5]=1))) {
+            return 1;
+        }
+        if(((a[6]=1)&(a[7]=1)&(a[8]=1))) {
+            return 1;
+        }
+        if(((a[0]=1)&(a[4]=1)&(a[8]=1))) {
+            return 1;
+        }
+        if(((a[2]=1)&(a[4]=1)&(a[6]=1))) {
+            return 1;
+        }
+        if(((a[0]=1)&(a[3]=1)&(a[6]=1))) {
+            return 1;
+        }
+        if(((a[4]=1)&(a[1]=1)&(a[7]=1))) {
+            return 1;
+        }
+        if(((a[5]=1)&(a[8]=1)&(a[2]=1))) {
+            return 1;
+        }
+        if((a[0]=2)&(a[1]=2)&(a[2]=2)) {
+            return 2;
+        }
+        if(((a[3]=2)&(a[4]=2)&(a[5]=2))) {
+            return 2;
+        }
+        if(((a[6]=2)&(a[7]=2)&(a[8]=2))) {
+            return 2;
+        }
+        if(((a[0]=2)&(a[4]=2)&(a[8]=2))) {
+            return 2;
+        }
+        if(((a[2]=2)&(a[4]=2)&(a[6]=2))) {
+            return 2;
+        }
+        if(((a[0]=2)&(a[3]=2)&(a[6]=2))) {
+            return 2;
+        }
+        if(((a[4]=2)&(a[1]=2)&(a[7]=2))) {
+            return 2;
+        }
+        if(((a[5]=2)&(a[8]=2)&(a[2]=2))) {
+            return 2;
+        }
+        return -1;
+    }
+}

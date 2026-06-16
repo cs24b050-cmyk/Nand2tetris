@@ -1,0 +1,53 @@
+// Tik tac toe
+class board {
+        field int x; // Just to have an field variable x is not used
+        constructor board new() {
+        // creates a grid of 3x3 and with empty boxes
+            do Screen.drawLine(136,8,136,248);
+            do Screen.drawLine(136,8,376,8);
+            do Screen.drawLine(136,248,376,248);
+            do Screen.drawLine(376,8,376,248);
+
+            do Screen.drawLine(216,8,216,248);
+            do Screen.drawLine(296,8,296,248);
+            do Screen.drawLine(136,88,376,88);
+            do Screen.drawLine(136,168,376,168);
+
+            return this;
+        }
+
+        // draws a solid square or a solid circle based on flag and i tells at what position we need to draw
+        method void draw(int i, int flag) {
+            var int x,y; // center of the grid where we are going to draw
+            // we need to calculate the center of the grid and put it in the values of x and y
+            // if flag is odd then we need to draw a rectangle at the desired location
+            if((i=1) | (i=2) | (i=3)) {
+                let y = 48;
+            }
+            if((i=4) | (i=5) | (i=6)) {
+                let y = 128;
+            }
+            if((i=7) | (i=8) | (i=9)) {
+                let y = 208;
+            }
+            // upto here is for y coordinates
+            if((i=1) | (i=4) | (i=7)) {
+                let x = 176;
+            }
+            if((i=5) | (i=2) | (i=8)) {
+                let x = 256;
+            }
+            if((i=9) | (i=6) | (i=3)) {
+                let x = 336;
+            }
+            if((flag = 1) | (flag = 3) | (flag = 5) | (flag = 7) | (flag = 9)) {
+                do Screen.drawRectangle((x-20),(y-20),(x+20),(y+20));
+            }
+            if((flag = 2) | (flag = 4) | (flag = 6) | (flag = 8)) {
+                do Screen.drawCircle(x,y,20);
+            }
+            return;
+        }
+
+        // changes as mentioned game are changed through this
+}
